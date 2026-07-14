@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Improved
+- **API key onboarding is now frictionless.** Settings modal replaced a terse 1-line help text with a clear 5-step numbered walkthrough ("Go to aistudio.google.com" → "Click Get API key" → "Select/create project" → "Copy key" → "Paste below"). Each step references the exact UI element users need to interact with.
+
 ### Fixed
 - **App was stuck on the Compassion Pause screen on every load, no matter what.** `styles.css` set `display: grid`/`display: block` directly on `.modal-backdrop`, `.compassion-screen`, and `.results` (the settings modal, crisis screen, and results panel). In CSS, a normal author rule always beats the browser's built-in `[hidden] { display: none }` rule regardless of selector specificity, so these three elements rendered even while their `hidden` attribute was set — the crisis overlay sat on top of the real homepage from the first paint, and the results panel (with its Save/Export buttons) was present in the DOM before any analysis ran.
   - Fix: added a single `[hidden] { display: none !important; }` rule so the `hidden` attribute is authoritative for every element in the app, present and future.
