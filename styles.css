@@ -451,6 +451,17 @@ h2 {
     color: var(--ink);
 }
 
+.steps-list a {
+    color: var(--teal);
+    text-decoration: none;
+    border-bottom: 1px solid var(--teal);
+}
+
+.steps-list a:hover {
+    color: var(--teal-dark);
+    border-bottom-color: var(--teal-dark);
+}
+
 .privacy-note {
     border: 1px solid #b7d9d4;
     border-radius: 8px;

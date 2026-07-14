@@ -339,13 +339,13 @@ async function testApiKey() {
         );
 
         if (response.status === 400 || response.status === 403) {
-            showError("❌ API key is invalid. Check aistudio.google.com for a fresh key.");
+            showError("❌ API key is invalid. Get a fresh key at aistudio.google.com/api-keys");
         } else if (response.status === 429) {
-            showError("✅ API key works! (Rate limit warning — wait a moment, try again)");
+            showError("✅ API key is valid! Gemini is rate-limited right now. Wait ~1 min, then use it normally.");
         } else if (!response.ok) {
-            showError(`❌ API error (${response.status}). Try again or check your key.`);
+            showError(`❌ API error (${response.status}). Try again or check your connection.`);
         } else {
-            showError("✅ API key works! Save it to use real AI analysis.");
+            showError("✅ API key works perfectly! Save it to use real AI analysis.");
         }
     } catch (err) {
         showError("❌ Connection error. Check your internet and key format.");
