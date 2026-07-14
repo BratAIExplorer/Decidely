@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+- **API key validation button** — "Test key" button in Settings modal lets users instantly validate their Gemini API key before attempting analysis. Clear feedback: ✅ "API key works!" or ❌ "API key is invalid." No more wasted dilemmas on bad keys.
+
 ### Improved
 - **API key onboarding is now frictionless.** Settings modal replaced a terse 1-line help text with a clear 5-step numbered walkthrough ("Go to aistudio.google.com" → "Click Get API key" → "Select/create project" → "Copy key" → "Paste below"). Each step references the exact UI element users need to interact with.
 
