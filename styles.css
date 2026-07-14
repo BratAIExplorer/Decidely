@@ -419,6 +419,38 @@ h2 {
     font-size: 13px;
 }
 
+.setup-steps {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px;
+    margin: 0;
+    background: var(--surface-soft);
+}
+
+.setup-legend {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.steps-list {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 13px;
+    color: #334155;
+    line-height: 1.6;
+}
+
+.steps-list li {
+    margin-bottom: 6px;
+}
+
+.steps-list strong {
+    color: var(--ink);
+}
+
 .privacy-note {
     border: 1px solid #b7d9d4;
     border-radius: 8px;

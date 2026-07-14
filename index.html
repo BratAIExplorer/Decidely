@@ -67,11 +67,22 @@
     <div id="settingsModal" class="modal-backdrop" hidden>
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
             <h2 id="settingsTitle">Settings</h2>
+
+            <fieldset class="setup-steps">
+                <legend class="setup-legend">Get your free Gemini API key</legend>
+                <ol class="steps-list">
+                    <li>Go to <strong>aistudio.google.com</strong></li>
+                    <li>Click <strong>"Get API key"</strong> (top left)</li>
+                    <li>Select or create a Google Cloud project</li>
+                    <li>Copy the key shown</li>
+                    <li>Paste it below</li>
+                </ol>
+            </fieldset>
+
             <label>
-                Google Gemini API key
-                <input id="apiKeyInput" type="password" placeholder="Paste your Gemini API key" autocomplete="off">
+                Your API key
+                <input id="apiKeyInput" type="password" placeholder="sk-..." autocomplete="off">
             </label>
-            <p class="help-text">Get a free key at <strong>aistudio.google.com</strong> → "Get API key".</p>
             <p class="privacy-note">🔒 <strong>Your privacy:</strong> your key and your decisions are stored only in this browser and sent directly to Google's AI service. Decidely has no server — we never store or see your data.</p>
             <div class="modal-actions">
                 <button id="clearKeyButton" class="ghost-button">Remove key</button>
