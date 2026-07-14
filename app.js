@@ -312,10 +312,57 @@ els.exportButton.addEventListener("click", () => {
     URL.revokeObjectURL(url);
 });
 
+// ---------- Test API key ----------
+async function testApiKey() {
+    const key = els.apiKeyInput.value.trim();
+    if (!key) {
+        showError("Paste an API key first.");
+        return;
+    }
+
+    const testBtn = document.querySelector("#testKeyButton");
+    const originalText = testBtn.textContent;
+    testBtn.disabled = true;
+    testBtn.textContent = "Testing…";
+
+    try {
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`,
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: "Respond with: OK" }] }],
+                    generationConfig: { responseMimeType: "application/json" },
+                }),
+            }
+        );
+
+        if (response.status === 400 || response.status === 403) {
+            showError("❌ API key is invalid. Check aistudio.google.com for a fresh key.");
+        } else if (response.status === 429) {
+            showError("✅ API key works! (Rate limit warning — wait a moment, try again)");
+        } else if (!response.ok) {
+            showError(`❌ API error (${response.status}). Try again or check your key.`);
+        } else {
+            showError("✅ API key works! Save it to use real AI analysis.");
+        }
+    } catch (err) {
+        showError("❌ Connection error. Check your internet and key format.");
+    } finally {
+        testBtn.disabled = false;
+        testBtn.textContent = originalText;
+    }
+}
+
 els.settingsButton.addEventListener("click", () => {
     els.apiKeyInput.value = getApiKey();
     els.settingsModal.hidden = false;
 });
+els.settingsModal.addEventListener("click", (event) => {
+    if (event.target === els.settingsModal) els.settingsModal.hidden = true;
+});
+document.querySelector("#testKeyButton").addEventListener("click", testApiKey);
 els.saveKeyButton.addEventListener("click", () => {
     const key = els.apiKeyInput.value.trim();
     if (key) localStorage.setItem("decidely-gemini-key", key);
@@ -327,9 +374,6 @@ els.clearKeyButton.addEventListener("click", () => {
     els.apiKeyInput.value = "";
     els.settingsModal.hidden = true;
     updateModeBadge();
-});
-els.settingsModal.addEventListener("click", (event) => {
-    if (event.target === els.settingsModal) els.settingsModal.hidden = true;
 });
 els.compassionBack.addEventListener("click", () => {
     els.compassionScreen.hidden = true;
