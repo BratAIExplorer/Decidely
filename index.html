@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Decidely — Untangle any decision</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand-mark" aria-hidden="true">D</div>
+        <div class="brand-text">
+            <h1>Decidely</h1>
+            <p>Untangle any decision. Clearly.</p>
+        </div>
+        <button id="settingsButton" class="ghost-button" aria-label="Settings">⚙ Settings</button>
+    </header>
+
+    <!-- ============ MAIN: Universal Input ============ -->
+    <main class="app-shell">
+        <section id="heroSection" class="hero">
+            <h2>What are you trying to decide?</h2>
+            <p class="hero-sub">Describe it in your own words — business or personal. Decidely picks the right lenses for you.</p>
+            <textarea id="dilemmaInput" rows="5"
+                placeholder="e.g. Should I leave my stable job in KL to move back to India and start my own business? My parents are ageing, my kids are settled in school here, and I have 18 months of savings..."></textarea>
+            <div class="hero-actions">
+                <button id="analyzeButton" class="primary-button">Untangle this</button>
+                <span id="modeBadge" class="mode-badge">Demo mode — add your API key in Settings for real AI analysis</span>
+            </div>
+            <p id="errorBox" class="error-box" hidden></p>
+        </section>
+
+        <!-- ============ RESULTS (hidden until analysis) ============ -->
+        <section id="resultsSection" class="results" hidden>
+            <div class="analysis-card">
+                <div class="analysis-header">
+                    <div>
+                        <p class="eyebrow"><span id="contextChip" class="context-chip"></span> Suggested direction</p>
+                        <h2 id="direction"></h2>
+                        <p id="confidenceNote" class="confidence-note"></p>
+                    </div>
+                </div>
+                <nav id="tabsNav" class="tabs" aria-label="Analysis lenses"></nav>
+                <section id="analysisContent" class="analysis-content"></section>
+            </div>
+
+            <div class="results-side">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Next Actions</h2>
+                        <div class="button-row">
+                            <button id="saveButton">Save</button>
+                            <button id="exportButton">Export</button>
+                        </div>
+                    </div>
+                    <div id="nextActions" class="action-list"></div>
+                </div>
+                <div class="panel">
+                    <h2>Saved decisions</h2>
+                    <div id="history" class="history-list"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============ SETTINGS MODAL ============ -->
+    <div id="settingsModal" class="modal-backdrop" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+            <h2 id="settingsTitle">Settings</h2>
+            <label>
+                Google Gemini API key
+                <input id="apiKeyInput" type="password" placeholder="Paste your Gemini API key" autocomplete="off">
+            </label>
+            <p class="help-text">Get a free key at <strong>aistudio.google.com</strong> → "Get API key".</p>
+            <p class="privacy-note">🔒 <strong>Your privacy:</strong> your key and your decisions are stored only in this browser and sent directly to Google's AI service. Decidely has no server — we never store or see your data.</p>
+            <div class="modal-actions">
+                <button id="clearKeyButton" class="ghost-button">Remove key</button>
+                <button id="saveKeyButton" class="primary-button">Save key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ COMPASSION PAUSE ============ -->
+    <div id="compassionScreen" class="compassion-screen" hidden>
+        <div class="compassion-card">
+            <h2>Let's pause for a moment 💛</h2>
+            <p>What you're going through sounds heavy, and it deserves more than an automated analysis. A caring human can help in a way no AI can.</p>
+            <ul>
+                <li><strong>US:</strong> call or text <strong>988</strong> (Suicide &amp; Crisis Lifeline)</li>
+                <li><strong>Malaysia:</strong> Befrienders KL — <strong>03-7627 2929</strong></li>
+                <li><strong>India:</strong> iCall — <strong>9152987821</strong></li>
+                <li><strong>Anywhere:</strong> findahelpline.com or 7cups.com for free emotional support</li>
+            </ul>
+            <p>Nothing you typed was sent anywhere. It stays on your device.</p>
+            <button id="compassionBack" class="ghost-button">← Go back</button>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Decidely is a thinking tool, not professional advice. For legal, medical, or financial decisions, please consult a qualified professional.</p>
+    </footer>
+
+    <script src="./app.js"></script>
+</body>
+</html>

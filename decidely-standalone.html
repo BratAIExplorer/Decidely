@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Decidely — Untangle any decision</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8f9fa; color: #1a1a1a; }
+        .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; }
+        .brand-mark { font-size: 1.5rem; font-weight: bold; width: 40px; height: 40px; background: #000; color: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .brand-text h1 { font-size: 1.25rem; margin: 0; }
+        .brand-text p { font-size: 0.875rem; color: #666; margin: 0; }
+        .topbar > * { flex: 1; }
+        button { padding: 0.5rem 1rem; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-size: 1rem; background: #fff; }
+        button.primary { background: #000; color: #fff; border-color: #000; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .app-shell { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .hero { background: #fff; padding: 3rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .hero h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .hero-sub { color: #666; margin-bottom: 1.5rem; }
+        textarea { width: 100%; padding: 1rem; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; font-size: 1rem; resize: vertical; }
+        .hero-actions { display: flex; gap: 1rem; align-items: center; margin-top: 1rem; }
+        .mode-badge { font-size: 0.875rem; color: #666; }
+        .error-box { color: #d32f2f; padding: 1rem; background: #ffebee; border-radius: 6px; margin-top: 1rem; display: none; }
+        .results { display: none; }
+        .results.active { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+        .analysis-card { background: #fff; padding: 2rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .analysis-header h2 { font-size: 1.75rem; margin: 0.5rem 0; }
+        .context-chip { display: inline-block; padding: 0.25rem 0.75rem; background: #e0e0e0; border-radius: 12px; font-size: 0.875rem; }
+        .confidence-note { font-size: 0.875rem; color: #666; margin-top: 0.5rem; }
+        .tabs { display: flex; gap: 1rem; border-bottom: 1px solid #e0e0e0; margin: 1.5rem 0; }
+        .tab { padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent; color: #666; }
+        .tab.active { color: #000; border-bottom-color: #000; }
+        .analysis-content { margin-top: 1rem; }
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .result-box { background: #f8f9fa; padding: 1rem; border-radius: 6px; }
+        .result-box h3 { margin: 0 0 0.5rem 0; }
+        .result-box ul { margin-left: 1.5rem; }
+        .result-box li { margin: 0.5rem 0; }
+        .panel { background: #fff; padding: 1.5rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 1rem; }
+        .panel h2 { font-size: 1rem; margin-bottom: 1rem; }
+        .action-list div { padding: 0.5rem 0; border-bottom: 1px solid #e0e0e0; }
+        .history-item { padding: 0.75rem 0; border-bottom: 1px solid #e0e0e0; }
+        .history-item button { background: none; border: none; color: #0066cc; cursor: pointer; text-align: left; width: 100%; padding: 0; }
+        .history-meta { font-size: 0.75rem; color: #999; margin-top: 0.25rem; }
+        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-backdrop.active { display: flex; }
+        .modal { background: #fff; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%; }
+        .modal input { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; margin: 0.5rem 0 1rem 0; }
+        .modal label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+        .modal-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .help-text { font-size: 0.875rem; color: #666; margin: 0.5rem 0; }
+        .privacy-note { font-size: 0.875rem; background: #f0f0f0; padding: 1rem; border-radius: 6px; margin: 1rem 0; }
+        .compassion-screen { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; }
+        .compassion-screen.active { display: flex; }
+        .compassion-card { background: #fff; padding: 2rem; border-radius: 12px; max-width: 600px; width: 90%; }
+        .compassion-card h2 { margin-bottom: 1rem; }
+        .compassion-card ul { margin-left: 1.5rem; margin: 1rem 0; }
+        .compassion-card li { margin: 0.5rem 0; }
+        .app-footer { text-align: center; padding: 2rem; color: #999; font-size: 0.875rem; }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand-mark">D</div>
+        <div class="brand-text">
+            <h1>Decidely</h1>
+            <p>Untangle any decision. Clearly.</p>
+        </div>
+        <button id="settingsButton">⚙ Settings</button>
+    </header>
+
+    <main class="app-shell">
+        <section class="hero">
+            <h2>What are you trying to decide?</h2>
+            <p class="hero-sub">Describe it in your own words — business or personal. Decidely picks the right lenses for you.</p>
+            <textarea id="dilemmaInput" rows="5" placeholder="e.g. Should I take a holiday to Bangkok even though airfare is expensive? I need a break for my mental health..."></textarea>
+            <div class="hero-actions">
+                <button id="analyzeButton" class="primary">Untangle this</button>
+                <span id="modeBadge" class="mode-badge">Demo mode</span>
+            </div>
+            <p id="errorBox" class="error-box"></p>
+        </section>
+
+        <section id="resultsSection" class="results">
+            <div class="analysis-card">
+                <div class="analysis-header">
+                    <p><span id="contextChip" class="context-chip"></span> Suggested direction</p>
+                    <h2 id="direction"></h2>
+                    <p id="confidenceNote" class="confidence-note"></p>
+                </div>
+                <nav id="tabsNav" class="tabs"></nav>
+                <section id="analysisContent" class="analysis-content"></section>
+            </div>
+
+            <div>
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Next Actions</h2>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button id="saveButton">Save</button>
+                            <button id="exportButton">Export</button>
+                        </div>
+                    </div>
+                    <div id="nextActions" class="action-list"></div>
+                </div>
+                <div class="panel">
+                    <h2>Saved decisions</h2>
+                    <div id="history" class="history-list"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="settingsModal" class="modal-backdrop">
+        <div class="modal" role="dialog" aria-modal="true">
+            <h2>Settings</h2>
+            <label>
+                Google Gemini API key
+                <input id="apiKeyInput" type="password" placeholder="Paste your Gemini API key">
+            </label>
+            <p class="help-text">Get a free key at <strong>aistudio.google.com</strong> → "Get API key".</p>
+            <p class="privacy-note">🔒 <strong>Your privacy:</strong> your key and decisions are stored only in this browser. Decidely has no server.</p>
+            <div class="modal-actions">
+                <button id="clearKeyButton">Remove key</button>
+                <button id="saveKeyButton" class="primary">Save key</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="compassionScreen" class="compassion-screen">
+        <div class="compassion-card">
+            <h2>Let's pause for a moment 💛</h2>
+            <p>What you're going through sounds heavy. A caring human can help.</p>
+            <ul>
+                <li><strong>US:</strong> 988 (Suicide & Crisis Lifeline)</li>
+                <li><strong>Malaysia:</strong> Befrienders KL — 03-7627 2929</li>
+                <li><strong>India:</strong> iCall — 9152987821</li>
+            </ul>
+            <button id="compassionBack">← Go back</button>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Decidely is a thinking tool, not professional advice.</p>
+    </footer>
+
+    <script>
+        const els = {
+            dilemma: document.querySelector("#dilemmaInput"),
+            analyzeButton: document.querySelector("#analyzeButton"),
+            modeBadge: document.querySelector("#modeBadge"),
+            errorBox: document.querySelector("#errorBox"),
+            results: document.querySelector("#resultsSection"),
+            contextChip: document.querySelector("#contextChip"),
+            direction: document.querySelector("#direction"),
+            confidenceNote: document.querySelector("#confidenceNote"),
+            tabsNav: document.querySelector("#tabsNav"),
+            analysisContent: document.querySelector("#analysisContent"),
+            nextActions: document.querySelector("#nextActions"),
+            history: document.querySelector("#history"),
+            saveButton: document.querySelector("#saveButton"),
+            exportButton: document.querySelector("#exportButton"),
+            settingsButton: document.querySelector("#settingsButton"),
+            settingsModal: document.querySelector("#settingsModal"),
+            apiKeyInput: document.querySelector("#apiKeyInput"),
+            saveKeyButton: document.querySelector("#saveKeyButton"),
+            clearKeyButton: document.querySelector("#clearKeyButton"),
+            compassionScreen: document.querySelector("#compassionScreen"),
+            compassionBack: document.querySelector("#compassionBack"),
+        };
+
+        const state = { analysis: null, activeTab: 0 };
+
+        const CRISIS_PATTERNS = [
+            /suicid/i, /kill (myself|me)/i, /end (my|it all) life/i, /self[- ]harm/i,
+            /hurt (myself|me)/i, /want to die/i, /don'?t want to (live|be alive)/i,
+        ];
+
+        function isCrisis(text) { return CRISIS_PATTERNS.some(p => p.test(text)); }
+
+        function getApiKey() { return localStorage.getItem("decidely-gemini-key") || ""; }
+
+        function updateModeBadge() {
+            els.modeBadge.textContent = getApiKey()
+                ? "AI mode — powered by your Gemini key"
+                : "Demo mode — add your API key in Settings";
+        }
+
+        async function callGemini(dilemma, key) {
+            const prompt = `You are Decidely, a decision-analysis assistant. Analyze this dilemma and respond ONLY with JSON:
+{
+  "context": "business" | "personal" | "mixed",
+  "direction": "one-sentence suggestion",
+  "confidence_note": "one plain-language confidence note",
+  "tabs": [ { "title": "lens name", "sections": [ { "title": "section", "items": ["point"] } ] } ],
+  "next_steps": ["action"]
+}
+Rules: Use Values Compass/Regret Minimization for personal. Use Pros & Cons/SWOT for business.
+
+Dilemma: """${dilemma}"""`;
+
+            const response = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(key)}`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json", temperature: 0.4 },
+                    }),
+                }
+            );
+
+            if (!response.ok) throw new Error("API error: " + response.status);
+            const data = await response.json();
+            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!text) throw new Error("Empty response");
+            return JSON.parse(text);
+        }
+
+        function demoAnalysis(dilemma) {
+            const personalWords = ["family", "parents", "marriage", "relationship", "move", "feel", "happy", "kids", "life", "friend", "home"];
+            const personalHits = personalWords.filter(w => dilemma.toLowerCase().includes(w)).length;
+            const context = personalHits >= 2 ? "personal" : personalHits === 1 ? "mixed" : "business";
+
+            const businessTabs = [
+                { title: "Pros & Cons", sections: [
+                    { title: "Pros", items: ["Clarifies assumptions", "Starts reversible", "Creates a record"] },
+                    { title: "Cons", items: ["Needs stakeholder buy-in", "Short-term effort", "Rollout matters"] },
+                ]},
+                { title: "SWOT", sections: [
+                    { title: "Strengths", items: ["Clear framing", "Reusable"] },
+                    { title: "Weaknesses", items: ["Depends on honest input", "Directional only"] },
+                    { title: "Opportunities", items: ["Repeatable playbook", "Better next time"] },
+                    { title: "Threats", items: ["Garbage in, garbage out", "Overconfidence"] },
+                ]},
+            ];
+            const personalTabs = [
+                { title: "Values Compass", sections: [
+                    { title: "What matters here", items: ["Connection with people", "Security vs. growth", "No guilt looking back"] },
+                    { title: "Sit with", items: ["What if no one judged?", "What's 'enough' for you?"] },
+                ]},
+                { title: "Regret Minimization", sections: [
+                    { title: "At 80, looking back", items: ["Which would you regret NOT trying?", "Action regret fades; inaction compounds", "What's truly reversible?"] },
+                ]},
+            ];
+
+            return {
+                context,
+                direction: "Test your leanings with one small, reversible step first.",
+                confidence_note: "Demo mode — generic framework, not real analysis. Add API key for that.",
+                tabs: context === "personal" ? personalTabs : context === "mixed" ? [personalTabs[0], businessTabs[0]] : businessTabs,
+                next_steps: ["Write down the assumptions that would change your mind", "Name the decision deadline", "Identify the smallest reversible first step"],
+            };
+        }
+
+        function renderAnalysis(analysis) {
+            state.analysis = analysis;
+            state.activeTab = 0;
+            const chipLabels = { business: "💼 Business", personal: "💛 Personal", mixed: "🔀 Mixed" };
+            els.contextChip.textContent = chipLabels[analysis.context] || "Decision";
+            els.direction.textContent = analysis.direction;
+            els.confidenceNote.textContent = analysis.confidence_note;
+            els.nextActions.innerHTML = (analysis.next_steps || []).map(s => `<div>${s}</div>`).join("");
+            renderTabs();
+            els.results.classList.add("active");
+        }
+
+        function renderTabs() {
+            const tabs = state.analysis.tabs || [];
+            els.tabsNav.innerHTML = tabs.map((t, i) =>
+                `<button class="tab ${i === state.activeTab ? "active" : ""}" data-tab="${i}">${t.title}</button>`
+            ).join("");
+            els.tabsNav.querySelectorAll("[data-tab]").forEach(b => {
+                b.addEventListener("click", () => { state.activeTab = Number(b.dataset.tab); renderTabs(); });
+            });
+            const active = tabs[state.activeTab];
+            els.analysisContent.innerHTML = !active ? "" : `<div class="two-column">${
+                (active.sections || []).map(s => `<div class="result-box"><h3>${s.title}</h3><ul>${
+                    (s.items || []).map(i => `<li>${i}</li>`).join("")
+                }</ul></div>`).join("")
+            }</div>`;
+        }
+
+        async function analyze() {
+            els.errorBox.style.display = "none";
+            const dilemma = els.dilemma.value.trim();
+            if (!dilemma) { els.errorBox.textContent = "Describe your decision first."; els.errorBox.style.display = "block"; return; }
+            if (isCrisis(dilemma)) { els.compassionScreen.classList.add("active"); return; }
+
+            const key = getApiKey();
+            els.analyzeButton.disabled = true;
+            els.analyzeButton.textContent = key ? "Thinking…" : "Preparing demo…";
+
+            try {
+                const analysis = key ? await callGemini(dilemma, key) : demoAnalysis(dilemma);
+                if (!Array.isArray(analysis.tabs)) throw new Error("Unexpected response format");
+                analysis.dilemma = dilemma;
+                renderAnalysis(analysis);
+            } catch (error) {
+                els.errorBox.textContent = error.message || "Something went wrong. Try again.";
+                els.errorBox.style.display = "block";
+            } finally {
+                els.analyzeButton.disabled = false;
+                els.analyzeButton.textContent = "Untangle this";
+            }
+        }
+
+        function saveCurrentDecision() {
+            if (!state.analysis) return;
+            const saved = JSON.parse(localStorage.getItem("decidely-decisions") || "[]");
+            saved.unshift({ id: crypto.randomUUID(), createdAt: new Date().toLocaleString(), analysis: state.analysis });
+            localStorage.setItem("decidely-decisions", JSON.stringify(saved.slice(0, 12)));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const saved = JSON.parse(localStorage.getItem("decidely-decisions") || "[]");
+            els.history.innerHTML = saved.length ? saved.map(item => `
+                <div class="history-item">
+                    <button data-load="${item.id}">${item.analysis.dilemma || "Saved decision"}</button>
+                    <div class="history-meta">${item.createdAt}</div>
+                </div>
+            `).join("") : "<p>No saved decisions yet.</p>";
+            els.history.querySelectorAll("[data-load]").forEach(b => {
+                b.addEventListener("click", () => {
+                    const item = JSON.parse(localStorage.getItem("decidely-decisions") || "[]").find(s => s.id === b.dataset.load);
+                    if (item) { els.dilemma.value = item.analysis.dilemma || ""; renderAnalysis(item.analysis); }
+                });
+            });
+        }
+
+        els.analyzeButton.addEventListener("click", analyze);
+        els.dilemma.addEventListener("keydown", e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) analyze(); });
+        els.saveButton.addEventListener("click", saveCurrentDecision);
+        els.exportButton.addEventListener("click", () => {
+            if (!state.analysis) return;
+            const blob = new Blob([JSON.stringify(state.analysis, null, 2)], { type: "application/json" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "decidely-decision.json";
+            a.click();
+            URL.revokeObjectURL(a.href);
+        });
+        els.settingsButton.addEventListener("click", () => {
+            els.apiKeyInput.value = getApiKey();
+            els.settingsModal.classList.add("active");
+        });
+        els.saveKeyButton.addEventListener("click", () => {
+            const key = els.apiKeyInput.value.trim();
+            if (key) localStorage.setItem("decidely-gemini-key", key);
+            els.settingsModal.classList.remove("active");
+            updateModeBadge();
+        });
+        els.clearKeyButton.addEventListener("click", () => {
+            localStorage.removeItem("decidely-gemini-key");
+            els.apiKeyInput.value = "";
+            els.settingsModal.classList.remove("active");
+            updateModeBadge();
+        });
+        els.settingsModal.addEventListener("click", e => { if (e.target === els.settingsModal) els.settingsModal.classList.remove("active"); });
+        els.compassionBack.addEventListener("click", () => els.compassionScreen.classList.remove("active"));
+        updateModeBadge();
+        renderHistory();
+    </script>
+</body>
+</html>
